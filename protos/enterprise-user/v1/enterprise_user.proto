@@ -1,0 +1,315 @@
+syntax = "proto3";
+
+package enterprise_user.v1;
+
+option go_package = "github.com/alloyx/jupiter-grpc-protos/enterprise-user/v1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "common/v1/common.proto";
+
+// 企业用户综合服务定义
+service EnterpriseUserService {
+  // ========== 用户管理 ==========
+  // 创建用户
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  
+  // 查询用户列表
+  rpc FindUsers(FindUsersRequest) returns (FindUsersResponse);
+  
+  // 更新用户信息
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // 删除用户
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+  
+  // 更新用户状态
+  rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse);
+  
+  // 激活用户
+  rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse);
+  
+  // ========== 企业管理 ==========
+  // 创建企业
+  rpc CreateEnterprise(CreateEnterpriseRequest) returns (CreateEnterpriseResponse);
+  
+  // 根据ID查询企业
+  rpc QueryEnterpriseById(QueryEnterpriseByIdRequest) returns (QueryEnterpriseByIdResponse);
+  
+  // ========== 角色权限管理 ==========
+  // 创建角色
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+  
+  // 获取企业角色列表
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse);
+  
+  // 获取角色权限
+  rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsResponse);
+  
+  // 更新角色权限
+  rpc UpdateRolePermissions(UpdateRolePermissionsRequest) returns (UpdateRolePermissionsResponse);
+  
+  // 删除角色
+  rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty);
+  
+  // ========== 健康检查 ==========
+  // 健康检查
+  rpc HealthCheck(google.protobuf.Empty) returns (common.v1.HealthCheckResponse);
+}
+
+// 用户相关消息定义
+message User {
+  string id = 1;
+  string enterprise_id = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string email = 5;
+  int32 role_id = 6;
+  UserStatus status = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_INACTIVE = 2;
+  USER_STATUS_PENDING = 3;
+  USER_STATUS_SUSPENDED = 4;
+}
+
+// 创建用户相关消息
+message CreateUserRequest {
+  string enterprise_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string password = 5;
+  int32 role_id = 6;
+}
+
+message CreateUserResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  User data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 查询用户相关消息
+message FindUsersRequest {
+  string enterprise_id = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  optional UserStatus status = 4;
+}
+
+message FindUsersResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated User data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 更新用户相关消息
+message UpdateUserRequest {
+  string user_id = 1;
+  string enterprise_id = 2;
+  optional string first_name = 3;
+  optional string last_name = 4;
+  optional int32 role_id = 5;
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  User data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 删除用户相关消息
+message DeleteUserRequest {
+  string user_id = 1;
+  string enterprise_id = 2;
+}
+
+// 更新用户状态相关消息
+message UpdateUserStatusRequest {
+  string user_id = 1;
+  string enterprise_id = 2;
+  UserStatus status = 3;
+}
+
+message UpdateUserStatusResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  User data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 激活用户相关消息
+message ActivateUserRequest {
+  string enterprise_id = 1;
+  string user_email = 2;
+  string code = 3;
+}
+
+message ActivateUserResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  User data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 企业相关消息定义
+message Enterprise {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string status = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateEnterpriseRequest {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string password = 4;
+  string name = 5;
+  string verification_code = 6;
+}
+
+message CreateEnterpriseResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  CreateEnterpriseData data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message CreateEnterpriseData {
+  string id = 1;
+}
+
+message QueryEnterpriseByIdRequest {
+  string enterprise_id = 1;
+}
+
+message QueryEnterpriseByIdResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Enterprise data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 角色权限相关消息定义
+message Role {
+  int32 id = 1;
+  string enterprise_id = 2;
+  string role_name = 3;
+  string description = 4;
+  repeated Permission permissions = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message Permission {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string resource = 4;
+  string action = 5;
+}
+
+message CreateRoleRequest {
+  string enterprise_id = 1;
+  string role_name = 2;
+  string description = 3;
+  repeated string permissions = 4;
+}
+
+message CreateRoleResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  CreateRoleData data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message CreateRoleData {
+  int32 id = 1;
+  string role_name = 2;
+}
+
+message GetRolesRequest {
+  string enterprise_id = 1;
+}
+
+message GetRolesResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  GetRolesResponseData data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message GetRolesResponseData {
+  repeated Role roles = 1;
+}
+
+message GetPermissionsRequest {
+  string enterprise_id = 1;
+  int32 role_id = 2;
+}
+
+message GetPermissionsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  PermissionDetailResponse data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message PermissionDetailResponse {
+  Role role = 1;
+  repeated Permission permissions = 2;
+}
+
+message UpdateRolePermissionsRequest {
+  string enterprise_id = 1;
+  int32 role_id = 2;
+  repeated int32 permissions = 3;
+  optional string role_name = 4;
+  optional string description = 5;
+}
+
+message UpdateRolePermissionsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  common.v1.ResponseMeta meta = 4;
+}
+
+message DeleteRoleRequest {
+  string enterprise_id = 1;
+  int32 role_id = 2;
+}
+
+// 企业钱包相关消息（从钱包服务移过来的企业相关部分）
+message CreateEnterpriseWalletRequest {
+  string enterprise_id = 1;
+  string customer_ref_id = 2;
+  string wallet_name = 3;
+  string user_id = 4;
+}
+
+message GetEnterpriseWalletsRequest {
+  string enterprise_id = 1;
+  string user_id = 2;
+}

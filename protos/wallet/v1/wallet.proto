@@ -1,0 +1,408 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+option go_package = "github.com/alloyx/jupiter-grpc-protos/wallet/v1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "common/v1/common.proto";
+
+// 钱包服务定义
+// 钱包综合服务定义
+service WalletService {
+  // ========== 钱包管理 ==========
+  // 创建钱包
+  rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
+  
+  // 获取钱包列表
+  rpc GetWallets(GetWalletsRequest) returns (GetWalletsResponse);
+  
+  // 根据ID获取钱包
+  rpc GetWalletById(GetWalletByIdRequest) returns (GetWalletByIdResponse);
+  
+  // 更新钱包
+  rpc UpdateWallet(UpdateWalletRequest) returns (UpdateWalletResponse);
+  
+  // 删除钱包
+  rpc DeleteWallet(DeleteWalletRequest) returns (google.protobuf.Empty);
+  
+  // 冻结/解冻钱包
+  rpc FreezeWallet(FreezeWalletRequest) returns (FreezeWalletResponse);
+  
+  // 获取钱包余额
+  rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
+  
+  // ========== 交易管理 ==========
+  // 创建交易
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse);
+  
+  // 获取交易列表
+  rpc GetTransactions(GetTransactionsRequest) returns (GetTransactionsResponse);
+  
+  // 根据ID获取交易
+  rpc GetTransactionById(GetTransactionByIdRequest) returns (GetTransactionByIdResponse);
+  
+  // 获取交易状态
+  rpc GetTransactionStatus(GetTransactionStatusRequest) returns (GetTransactionStatusResponse);
+  
+  // 更新交易状态
+  rpc UpdateTransactionStatus(UpdateTransactionStatusRequest) returns (UpdateTransactionStatusResponse);
+  
+  // 取消交易
+  rpc CancelTransaction(CancelTransactionRequest) returns (CancelTransactionResponse);
+  
+  // 获取交易历史
+  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse);
+  
+  // ========== 健康检查 ==========
+  // 健康检查
+  rpc HealthCheck(google.protobuf.Empty) returns (common.v1.HealthCheckResponse);
+}
+
+// 钱包相关消息定义
+message Wallet {
+  string id = 1;
+  string enterprise_id = 2;
+  string customer_ref_id = 3;
+  string wallet_name = 4;
+  string user_id = 5;
+  WalletType wallet_type = 6;
+  WalletStatus status = 7;
+  repeated Balance balances = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+enum WalletType {
+  WALLET_TYPE_UNSPECIFIED = 0;
+  WALLET_TYPE_PERSONAL = 1;
+  WALLET_TYPE_ENTERPRISE = 2;
+  WALLET_TYPE_INVESTMENT = 3;
+  WALLET_TYPE_SAVINGS = 4;
+}
+
+enum WalletStatus {
+  WALLET_STATUS_UNSPECIFIED = 0;
+  WALLET_STATUS_ACTIVE = 1;
+  WALLET_STATUS_INACTIVE = 2;
+  WALLET_STATUS_FROZEN = 3;
+  WALLET_STATUS_SUSPENDED = 4;
+  WALLET_STATUS_CLOSED = 5;
+}
+
+message Balance {
+  string currency = 1;
+  string available_amount = 2;
+  string pending_amount = 3;
+  string frozen_amount = 4;
+  string total_amount = 5;
+  google.protobuf.Timestamp last_updated = 6;
+}
+
+// 创建钱包相关消息
+message CreateWalletRequest {
+  string enterprise_id = 1;
+  string customer_ref_id = 2;
+  string wallet_name = 3;
+  string user_id = 4;
+  WalletType wallet_type = 5;
+  repeated string supported_currencies = 6;
+}
+
+message CreateWalletResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Wallet data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 获取钱包列表相关消息
+message GetWalletsRequest {
+  string enterprise_id = 1;
+  string user_id = 2;
+  optional WalletType wallet_type = 3;
+  optional WalletStatus status = 4;
+  int32 page = 5;
+  int32 limit = 6;
+}
+
+message GetWalletsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated Wallet data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 根据ID获取钱包相关消息
+message GetWalletByIdRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+}
+
+message GetWalletByIdResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Wallet data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 更新钱包相关消息
+message UpdateWalletRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  optional string wallet_name = 4;
+  optional WalletStatus status = 5;
+}
+
+message UpdateWalletResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Wallet data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 删除钱包相关消息
+message DeleteWalletRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+}
+
+// 冻结钱包相关消息
+message FreezeWalletRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  bool freeze = 4; // true为冻结，false为解冻
+  string reason = 5;
+}
+
+message FreezeWalletResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Wallet data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 获取钱包余额相关消息
+message GetWalletBalanceRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  optional string currency = 4;
+}
+
+message GetWalletBalanceResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated Balance data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 交易相关消息定义
+message Transaction {
+  string id = 1;
+  string wallet_id = 2;
+  string enterprise_id = 3;
+  string user_id = 4;
+  TransactionType transaction_type = 5;
+  TransactionStatus status = 6;
+  string currency = 7;
+  string amount = 8;
+  string fee = 9;
+  string net_amount = 10;
+  string reference_id = 11;
+  string description = 12;
+  TransactionDetails details = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+  google.protobuf.Timestamp completed_at = 16;
+}
+
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_DEPOSIT = 1;
+  TRANSACTION_TYPE_WITHDRAWAL = 2;
+  TRANSACTION_TYPE_TRANSFER_IN = 3;
+  TRANSACTION_TYPE_TRANSFER_OUT = 4;
+  TRANSACTION_TYPE_PAYMENT = 5;
+  TRANSACTION_TYPE_REFUND = 6;
+  TRANSACTION_TYPE_FEE = 7;
+  TRANSACTION_TYPE_EXCHANGE = 8;
+}
+
+enum TransactionStatus {
+  TRANSACTION_STATUS_UNSPECIFIED = 0;
+  TRANSACTION_STATUS_PENDING = 1;
+  TRANSACTION_STATUS_PROCESSING = 2;
+  TRANSACTION_STATUS_COMPLETED = 3;
+  TRANSACTION_STATUS_FAILED = 4;
+  TRANSACTION_STATUS_CANCELLED = 5;
+  TRANSACTION_STATUS_EXPIRED = 6;
+}
+
+message TransactionDetails {
+  optional string from_address = 1;
+  optional string to_address = 2;
+  optional string blockchain_hash = 3;
+  optional int64 block_number = 4;
+  optional int64 confirmation_count = 5;
+  optional string gas_fee = 6;
+  optional string exchange_rate = 7;
+  map<string, string> metadata = 8;
+}
+
+// 创建交易相关消息
+message CreateTransactionRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  TransactionType transaction_type = 4;
+  string currency = 5;
+  string amount = 6;
+  optional string to_address = 7;
+  optional string reference_id = 8;
+  optional string description = 9;
+  map<string, string> metadata = 10;
+}
+
+message CreateTransactionResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Transaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 获取交易列表相关消息
+message GetTransactionsRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  optional TransactionType transaction_type = 4;
+  optional TransactionStatus status = 5;
+  optional string currency = 6;
+  optional google.protobuf.Timestamp start_date = 7;
+  optional google.protobuf.Timestamp end_date = 8;
+  int32 page = 9;
+  int32 limit = 10;
+}
+
+message GetTransactionsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated Transaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 根据ID获取交易相关消息
+message GetTransactionByIdRequest {
+  string transaction_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+}
+
+message GetTransactionByIdResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Transaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 获取交易状态相关消息
+message GetTransactionStatusRequest {
+  string transaction_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+}
+
+message GetTransactionStatusResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  TransactionStatusData data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message TransactionStatusData {
+  string transaction_id = 1;
+  TransactionStatus status = 2;
+  string status_message = 3;
+  optional google.protobuf.Timestamp last_updated = 4;
+}
+
+// 更新交易状态相关消息
+message UpdateTransactionStatusRequest {
+  string transaction_id = 1;
+  string enterprise_id = 2;
+  TransactionStatus status = 3;
+  optional string status_message = 4;
+  map<string, string> metadata = 5;
+}
+
+message UpdateTransactionStatusResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Transaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 取消交易相关消息
+message CancelTransactionRequest {
+  string transaction_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  string reason = 4;
+}
+
+message CancelTransactionResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  Transaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// 获取交易历史相关消息
+message GetTransactionHistoryRequest {
+  string wallet_id = 1;
+  string enterprise_id = 2;
+  string user_id = 3;
+  optional google.protobuf.Timestamp start_date = 4;
+  optional google.protobuf.Timestamp end_date = 5;
+  int32 page = 6;
+  int32 limit = 7;
+}
+
+message GetTransactionHistoryResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  TransactionHistoryData data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+message TransactionHistoryData {
+  repeated Transaction transactions = 1;
+  TransactionSummary summary = 2;
+}
+
+message TransactionSummary {
+  string total_deposits = 1;
+  string total_withdrawals = 2;
+  string total_fees = 3;
+  int32 transaction_count = 4;
+  map<string, string> currency_totals = 5;
+}

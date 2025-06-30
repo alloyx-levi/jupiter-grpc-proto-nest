@@ -1,0 +1,1021 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "wallet",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "App"
+    },
+    {
+      "name": "Test"
+    },
+    {
+      "name": "Health"
+    },
+    {
+      "name": "wallets"
+    },
+    {
+      "name": "Transaction"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "AppController_getHello",
+        "deprecated": false,
+        "description": "",
+        "operationId": "AppController_getHello",
+        "tags": [
+          "App"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/test/hello": {
+      "get": {
+        "summary": "Get hello message",
+        "deprecated": false,
+        "description": "",
+        "operationId": "TestController_getHello",
+        "tags": [
+          "Test"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved hello message.",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "HealthController_check",
+        "deprecated": false,
+        "description": "",
+        "operationId": "HealthController_check",
+        "tags": [
+          "Health"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "examples": [
+                        "ok"
+                      ]
+                    },
+                    "info": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {
+                          "database": {
+                            "status": "up"
+                          }
+                        }
+                      ],
+                      "properties": {},
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {}
+                      ],
+                      "properties": {},
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {
+                          "database": {
+                            "status": "up"
+                          }
+                        }
+                      ],
+                      "properties": {}
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "examples": [
+                        "error"
+                      ]
+                    },
+                    "info": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {
+                          "database": {
+                            "status": "up"
+                          }
+                        }
+                      ],
+                      "properties": {},
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {
+                          "redis": {
+                            "status": "down",
+                            "message": "Could not connect"
+                          }
+                        }
+                      ],
+                      "properties": {},
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "examples": [
+                        {
+                          "database": {
+                            "status": "up"
+                          },
+                          "redis": {
+                            "status": "down",
+                            "message": "Could not connect"
+                          }
+                        }
+                      ],
+                      "properties": {}
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/wallets/account": {
+      "post": {
+        "summary": "Create a wallet account",
+        "deprecated": false,
+        "description": "Create an address based on the passed blockchain type and return the account key and address list",
+        "operationId": "WalletAccountController_createWalletAccount",
+        "tags": [
+          "wallets"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWalletAccountDto"
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "x-200:wallets_CreateWalletAccount": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accountKey": {
+                          "type": "string"
+                        },
+                        "coinAddressList": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "coinKey": {
+                                "type": "string"
+                              },
+                              "addressGroupKey": {
+                                "type": "string"
+                              },
+                              "addressGroupName": {
+                                "type": "string"
+                              },
+                              "addressList": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "address": {
+                                      "type": "string"
+                                    },
+                                    "addressType": {
+                                      "type": "string"
+                                    },
+                                    "derivePath": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "accountKey",
+                        "coinAddressList",
+                        "createdAt"
+                      ]
+                    },
+                    "timestamp": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "OK",
+                  "data": {
+                    "accountKey": "accounte209ac361de94dfb958de3de130a392c",
+                    "coinAddressList": [
+                      {
+                        "coinKey": "ETH",
+                        "addressGroupKey": "addressba3fdcf1caba45c6b819d16234786f3c",
+                        "addressGroupName": "AddressName",
+                        "addressList": [
+                          {
+                            "address": "0x51DCA0b5eed54b6fE7F2cD41945c25Edd93af829",
+                            "addressType": "DEFAULT",
+                            "derivePath": "m/44/666/31/0/0"
+                          }
+                        ]
+                      }
+                    ],
+                    "createdAt": "2025-05-29T05:54:05.263Z"
+                  },
+                  "timestamp": 1748498045
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/wallets/account/{accountKey}": {
+      "get": {
+        "summary": "Get wallet account details by accountKey",
+        "deprecated": false,
+        "description": "Retrieve wallet account information by the given accountKey",
+        "operationId": "WalletAccountController_getWalletAccountByKey",
+        "tags": [
+          "wallets"
+        ],
+        "parameters": [
+          {
+            "name": "accountKey",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "x-200:wallets_GetWalletDetails": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accountKey": {
+                          "type": "string"
+                        },
+                        "accountName": {
+                          "type": "string"
+                        },
+                        "accountIndex": {
+                          "type": "integer"
+                        },
+                        "accountType": {
+                          "type": "string"
+                        },
+                        "hiddenOnUI": {
+                          "type": "boolean"
+                        },
+                        "usdBalance": {
+                          "type": "string"
+                        },
+                        "frozenUsdBalance": {
+                          "type": "string"
+                        },
+                        "amlLockUsdBalance": {
+                          "type": "string"
+                        },
+                        "pubKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "signAlg": {
+                                "type": "string"
+                              },
+                              "pubKey": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "signAlg",
+                              "pubKey"
+                            ]
+                          }
+                        },
+                        "accountTag": {
+                          "type": "string"
+                        },
+                        "customerRefId": {
+                          "type": "null"
+                        },
+                        "archived": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "accountKey",
+                        "accountName",
+                        "accountIndex",
+                        "accountType",
+                        "hiddenOnUI",
+                        "usdBalance",
+                        "frozenUsdBalance",
+                        "amlLockUsdBalance",
+                        "pubKeys",
+                        "accountTag",
+                        "customerRefId",
+                        "archived"
+                      ]
+                    },
+                    "timestamp": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "OK",
+                  "data": {
+                    "accountKey": "accounte209ac361de94dfb958de3de130a392c",
+                    "accountName": "UmsEKjBZyxDzFAsbXUPi",
+                    "accountIndex": 31,
+                    "accountType": "VAULT_ACCOUNT",
+                    "hiddenOnUI": false,
+                    "usdBalance": "0",
+                    "frozenUsdBalance": "0",
+                    "amlLockUsdBalance": "0",
+                    "pubKeys": [
+                      {
+                        "signAlg": "secp256k1",
+                        "pubKey": "035f2221391557055f0a0c840e78fd0887abb7ec29b1b38b5af7a3e6d51fbfd989"
+                      },
+                      {
+                        "signAlg": "ed25519",
+                        "pubKey": "28073d31694ac478758155a78e2768d9c97f0add846d3ebf45bf83d6516e0067"
+                      }
+                    ],
+                    "accountTag": "NONE",
+                    "customerRefId": null,
+                    "archived": false
+                  },
+                  "timestamp": 1748498045
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/wallets/account/{accountKey}/addresses": {
+      "get": {
+        "summary": "Get the currency address list by accountKey",
+        "deprecated": false,
+        "description": "Retrieve all currency addresses under the account",
+        "operationId": "WalletAccountController_getWalletAddressesByAccountKey",
+        "tags": [
+          "wallets"
+        ],
+        "parameters": [
+          {
+            "name": "accountKey",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "x-200:wallets_GetCurrencyAddress": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "coinKey": {
+                            "type": "string"
+                          },
+                          "coinFullName": {
+                            "type": "string"
+                          },
+                          "coinName": {
+                            "type": "string"
+                          },
+                          "coinDecimal": {
+                            "type": "integer"
+                          },
+                          "txRefUrl": {
+                            "type": "string"
+                          },
+                          "addressRefUrl": {
+                            "type": "string"
+                          },
+                          "logoUrl": {
+                            "type": "string"
+                          },
+                          "symbol": {
+                            "type": "string"
+                          },
+                          "isMultipleAddress": {
+                            "type": "string"
+                          },
+                          "feeCoinKey": {
+                            "type": "string"
+                          },
+                          "feeUnit": {
+                            "type": "string"
+                          },
+                          "feeDecimal": {
+                            "type": "integer"
+                          },
+                          "showCoinDecimal": {
+                            "type": "integer"
+                          },
+                          "balance": {
+                            "type": "string"
+                          },
+                          "frozenBalance": {
+                            "type": "string"
+                          },
+                          "amlLockBalance": {
+                            "type": "string"
+                          },
+                          "usdBalance": {
+                            "type": "string"
+                          },
+                          "frozenUsdBalance": {
+                            "type": "string"
+                          },
+                          "amlLockUsdBalance": {
+                            "type": "string"
+                          },
+                          "addressList": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "address": {
+                                  "type": "string"
+                                },
+                                "addressType": {
+                                  "type": "string"
+                                },
+                                "amlLock": {
+                                  "type": "string"
+                                },
+                                "derivePath": {
+                                  "type": "string"
+                                },
+                                "addressBalance": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "timestamp"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "OK",
+                  "data": [
+                    {
+                      "coinKey": "ETH",
+                      "coinFullName": "Ethereum",
+                      "coinName": "ETH",
+                      "coinDecimal": 18,
+                      "txRefUrl": "https://etherscan.io/tx/{txHash}",
+                      "addressRefUrl": "https://etherscan.io/address/{address}",
+                      "logoUrl": "https://resource-s3.safeheron.vip/resource/img/logo/1626851355990.png",
+                      "symbol": "ETH",
+                      "isMultipleAddress": "NO",
+                      "feeCoinKey": "ETH",
+                      "feeUnit": "Gwei",
+                      "feeDecimal": 9,
+                      "showCoinDecimal": 8,
+                      "balance": "0",
+                      "frozenBalance": "",
+                      "amlLockBalance": "0",
+                      "usdBalance": "0",
+                      "frozenUsdBalance": "",
+                      "amlLockUsdBalance": "0",
+                      "addressList": [
+                        {
+                          "address": "0x51DCA0b5eed54b6fE7F2cD41945c25Edd93af829",
+                          "addressType": "DEFAULT",
+                          "amlLock": "NO",
+                          "derivePath": "m/44/666/31/0/0",
+                          "addressBalance": "0"
+                        }
+                      ]
+                    }
+                  ],
+                  "timestamp": 1748498046
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/transactions/fee-estimate": {
+      "post": {
+        "summary": "Get the currency gase fee",
+        "deprecated": false,
+        "description": "Estimate the current network status gas fee",
+        "operationId": "TransactionController_feeEstimate",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GasFeeDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/transactions/coins": {
+      "get": {
+        "summary": "Get the coin list",
+        "deprecated": false,
+        "description": "Obtain supported coins of safeheron",
+        "operationId": "TransactionController_coinsList",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/transactions/{txKey}": {
+      "get": {
+        "summary": "Get transaction detail by txKey",
+        "deprecated": false,
+        "description": "Get detail info of a transaction using txKey",
+        "operationId": "TransactionController_getTransactionByTxKey",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "txKey",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/transactions": {
+      "get": {
+        "summary": "Get transactions list",
+        "deprecated": false,
+        "description": "Get transactions list",
+        "operationId": "TransactionController_getTransactions",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "limit of the transaction",
+            "required": false,
+            "schema": {
+              "default": "20",
+              "type": "string",
+              "examples": [
+                "20"
+              ]
+            }
+          },
+          {
+            "name": "sourceAccountKey",
+            "in": "query",
+            "description": "sourceAccountKey of the transaction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "1234567890"
+              ]
+            }
+          },
+          {
+            "name": "destinationAccountKey",
+            "in": "query",
+            "description": "destinationAccountKey of the transaction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "1234567890"
+              ]
+            }
+          },
+          {
+            "name": "createTimeMin",
+            "in": "query",
+            "description": "createTimeMin of the transaction, default is 7 days ago",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "1716873600000"
+              ]
+            }
+          },
+          {
+            "name": "createTimeMax",
+            "in": "query",
+            "description": "createTimeMax of the transaction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "1716873600000"
+              ]
+            }
+          },
+          {
+            "name": "completedTimeMin",
+            "in": "query",
+            "description": "completedTimeMin of the transaction, default is 7 days ago",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "1716873600000"
+              ]
+            }
+          },
+          {
+            "name": "completedTimeMax",
+            "in": "query",
+            "description": "completedTimeMax of the transaction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "examples": [
+                1716873600000
+              ]
+            }
+          },
+          {
+            "name": "fromId",
+            "in": "query",
+            "description": "fromId, it is the beginning of the transaction list, it is the txKey of the last transaction in the previous page, if null will return the first page  ",
+            "required": false,
+            "schema": {
+              "default": null,
+              "type": "string",
+              "examples": [
+                "1234567890"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/transactions/approval-detail": {
+      "post": {
+        "summary": "Get approval detail by txKeyList",
+        "deprecated": false,
+        "description": "Get approval detail",
+        "operationId": "TransactionController_getApprovalDetail",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GasFeeDTO": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateWalletAccountDto": {
+        "type": "object",
+        "properties": {
+          "blockchainType": {
+            "description": "Blockchain type, optional",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "ETH"
+              ]
+            ]
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Account name, optional",
+            "examples": [
+              "MyWattletAcount"
+            ]
+          }
+        }
+      },
+      "GetApprovalDetailDto": {
+        "type": "object",
+        "properties": {
+          "txKeyList": {
+            "description": "txKeyList of the transaction",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "1234567890",
+                "1234567891"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

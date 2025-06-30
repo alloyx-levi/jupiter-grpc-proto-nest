@@ -1,0 +1,67 @@
+{
+  "name": "@alloyx/jupiter-grpc-protos",
+  "version": "1.0.0",
+  "description": "Unified gRPC proto files for Jupiter microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "protos/**/*.proto",
+    "generated/**/*"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist generated",
+    "build": "npm run generate:proto && npm run build:ts",
+    "generate:proto": "mkdir -p generated && npm run generate:common && npm run generate:enterprise-user && npm run generate:wallet",
+    "generate:common": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/common/v1/*.proto",
+    "generate:enterprise-user": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/enterprise-user/v1/*.proto",
+    "generate:wallet": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/wallet/v1/*.proto",
+    "build:ts": "tsc",
+    "clean": "rimraf dist generated",
+    "prepare": "npm run build",
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "eslint protos/**/*.proto || true",
+    "format": "prettier --write \"**/*.{json,md,yml,yaml}\"",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major",
+    "release": "npm run build && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alloyx/jupiter-grpc-proto-nest.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "@alloyx:registry": "https://npm.pkg.github.com"
+  },
+  "keywords": [
+    "grpc",
+    "proto",
+    "microservices",
+    "nestjs",
+    "jupiter"
+  ],
+  "author": "Alloyx Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/google-protobuf": "^3.15.12",
+    "@types/node": "^20.19.2",
+    "eslint": "^8.57.1",
+    "grpc_tools_node_protoc_ts": "^5.3.3",
+    "grpc-tools": "^1.13.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^5.0.10",
+    "rxjs": "^7.8.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.15",
+    "google-protobuf": "^3.21.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
