@@ -1,5 +1,5 @@
 {
-  "name": "@alloyx/jupiter-grpc-protos",
+  "name": "@AlloyXGroup/jupiter-grpc-protos",
   "version": "1.0.0",
   "description": "Unified gRPC proto files for Jupiter microservices",
   "main": "dist/index.js",
@@ -31,8 +31,7 @@
     "release": "npm run build && npm publish",
     "release:patch": "npm version patch && git push origin main --tags",
     "release:minor": "npm version minor && git push origin main --tags",
-    "release:major": "npm version major && git push origin main --tags",
-    "release:dev": "git push origin main"
+    "release:major": "npm version major && git push origin main --tags"
   },
   "repository": {
     "type": "git",
