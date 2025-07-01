@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { Timestamp, HealthCheckResponse, PaginationRequest, PaginationResponse, BaseResponse } from '../types/common.types';
 
-// 钱包服务接口定义
+// Wallet service interface definition
 export interface IWalletService {
-  // ========== 钱包管理 ==========
+  // ========== Wallet Management ==========
   createWallet(request: CreateWalletRequest): Observable<CreateWalletResponse>;
   getWallets(request: GetWalletsRequest): Observable<GetWalletsResponse>;
   getWalletById(request: GetWalletByIdRequest): Observable<GetWalletByIdResponse>;
@@ -12,7 +12,7 @@ export interface IWalletService {
   freezeWallet(request: FreezeWalletRequest): Observable<FreezeWalletResponse>;
   getWalletBalance(request: GetWalletBalanceRequest): Observable<GetWalletBalanceResponse>;
 
-  // ========== 交易管理 ==========
+  // ========== Transaction Management ==========
   createTransaction(request: CreateTransactionRequest): Observable<CreateTransactionResponse>;
   getTransactions(request: GetTransactionsRequest): Observable<GetTransactionsResponse>;
   getTransactionById(request: GetTransactionByIdRequest): Observable<GetTransactionByIdResponse>;
@@ -21,22 +21,22 @@ export interface IWalletService {
   cancelTransaction(request: CancelTransactionRequest): Observable<CancelTransactionResponse>;
   getTransactionHistory(request: GetTransactionHistoryRequest): Observable<GetTransactionHistoryResponse>;
 
-  // ========== 健康检查 ==========
+  // ========== Health Check ==========
   healthCheck(request: void): Observable<HealthCheckResponse>;
 }
 
-// 钱包相关类型定义
+// Wallet related type definitions
 export interface Wallet {
   id: string;
-  enterprise_id: string;
-  customer_ref_id: string;
-  wallet_name: string;
-  user_id: string;
-  wallet_type: WalletType;
+  enterpriseId: string;
+  customerRefId: string;
+  walletName: string;
+  userId: string;
+  walletType: WalletType;
   status: WalletStatus;
   balances: Balance[];
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export enum WalletType {
@@ -58,29 +58,29 @@ export enum WalletStatus {
 
 export interface Balance {
   currency: string;
-  available_amount: string;
-  pending_amount: string;
-  frozen_amount: string;
-  total_amount: string;
-  last_updated: Timestamp;
+  availableAmount: string;
+  pendingAmount: string;
+  frozenAmount: string;
+  totalAmount: string;
+  lastUpdated: Timestamp;
 }
 
-// 交易相关类型定义
+// Transaction related type definitions
 export interface Transaction {
   id: string;
-  wallet_id: string;
-  from_wallet_id: string;
-  to_wallet_id: string;
-  transaction_type: TransactionType;
+  walletId: string;
+  fromWalletId: string;
+  toWalletId: string;
+  transactionType: TransactionType;
   amount: string;
   currency: string;
   fee: string;
   description: string;
   status: TransactionStatus;
   metadata: Record<string, string>;
-  created_at: Timestamp;
-  updated_at: Timestamp;
-  completed_at?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  completedAt?: Timestamp;
 }
 
 export enum TransactionType {
@@ -102,15 +102,15 @@ export enum TransactionStatus {
   TRANSACTION_STATUS_EXPIRED = 6,
 }
 
-// ========== 钱包管理请求/响应类型定义 ==========
+// ========== Wallet Management Request/Response Type Definitions ==========
 
 export interface CreateWalletRequest {
-  enterprise_id: string;
-  customer_ref_id: string;
-  wallet_name: string;
-  user_id: string;
-  wallet_type: WalletType;
-  initial_currency?: string;
+  enterpriseId: string;
+  customerRefId: string;
+  walletName: string;
+  userId: string;
+  walletType: WalletType;
+  initialCurrency?: string;
 }
 
 export interface CreateWalletResponse extends BaseResponse {
@@ -118,9 +118,9 @@ export interface CreateWalletResponse extends BaseResponse {
 }
 
 export interface GetWalletsRequest extends PaginationRequest {
-  enterprise_id: string;
-  user_id?: string;
-  wallet_type?: WalletType;
+  enterpriseId: string;
+  userId?: string;
+  walletType?: WalletType;
   status?: WalletStatus;
 }
 
@@ -129,8 +129,8 @@ export interface GetWalletsResponse extends PaginationResponse, BaseResponse {
 }
 
 export interface GetWalletByIdRequest {
-  wallet_id: string;
-  enterprise_id: string;
+  walletId: string;
+  enterpriseId: string;
 }
 
 export interface GetWalletByIdResponse extends BaseResponse {
@@ -138,9 +138,9 @@ export interface GetWalletByIdResponse extends BaseResponse {
 }
 
 export interface UpdateWalletRequest {
-  wallet_id: string;
-  enterprise_id: string;
-  wallet_name?: string;
+  walletId: string;
+  enterpriseId: string;
+  walletName?: string;
   status?: WalletStatus;
 }
 
@@ -149,13 +149,13 @@ export interface UpdateWalletResponse extends BaseResponse {
 }
 
 export interface DeleteWalletRequest {
-  wallet_id: string;
-  enterprise_id: string;
+  walletId: string;
+  enterpriseId: string;
 }
 
 export interface FreezeWalletRequest {
-  wallet_id: string;
-  enterprise_id: string;
+  walletId: string;
+  enterpriseId: string;
   reason: string;
 }
 
@@ -164,8 +164,8 @@ export interface FreezeWalletResponse extends BaseResponse {
 }
 
 export interface GetWalletBalanceRequest {
-  wallet_id: string;
-  enterprise_id: string;
+  walletId: string;
+  enterpriseId: string;
   currency?: string;
 }
 
@@ -173,12 +173,12 @@ export interface GetWalletBalanceResponse extends BaseResponse {
   balances: Balance[];
 }
 
-// ========== 交易管理请求/响应类型定义 ==========
+// ========== Transaction Management Request/Response Type Definitions ==========
 
 export interface CreateTransactionRequest {
-  from_wallet_id: string;
-  to_wallet_id: string;
-  transaction_type: TransactionType;
+  fromWalletId: string;
+  toWalletId: string;
+  transactionType: TransactionType;
   amount: string;
   currency: string;
   description?: string;
@@ -190,13 +190,13 @@ export interface CreateTransactionResponse extends BaseResponse {
 }
 
 export interface GetTransactionsRequest extends PaginationRequest {
-  wallet_id?: string;
-  enterprise_id: string;
-  transaction_type?: TransactionType;
+  walletId?: string;
+  enterpriseId: string;
+  transactionType?: TransactionType;
   status?: TransactionStatus;
   currency?: string;
-  start_date?: Timestamp;
-  end_date?: Timestamp;
+  startDate?: Timestamp;
+  endDate?: Timestamp;
 }
 
 export interface GetTransactionsResponse extends PaginationResponse, BaseResponse {
@@ -204,8 +204,8 @@ export interface GetTransactionsResponse extends PaginationResponse, BaseRespons
 }
 
 export interface GetTransactionByIdRequest {
-  transaction_id: string;
-  enterprise_id: string;
+  transactionId: string;
+  enterpriseId: string;
 }
 
 export interface GetTransactionByIdResponse extends BaseResponse {
@@ -213,18 +213,18 @@ export interface GetTransactionByIdResponse extends BaseResponse {
 }
 
 export interface GetTransactionStatusRequest {
-  transaction_id: string;
-  enterprise_id: string;
+  transactionId: string;
+  enterpriseId: string;
 }
 
 export interface GetTransactionStatusResponse extends BaseResponse {
   status: TransactionStatus;
-  updated_at: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface UpdateTransactionStatusRequest {
-  transaction_id: string;
-  enterprise_id: string;
+  transactionId: string;
+  enterpriseId: string;
   status: TransactionStatus;
   reason?: string;
 }
@@ -234,8 +234,8 @@ export interface UpdateTransactionStatusResponse extends BaseResponse {
 }
 
 export interface CancelTransactionRequest {
-  transaction_id: string;
-  enterprise_id: string;
+  transactionId: string;
+  enterpriseId: string;
   reason: string;
 }
 
@@ -244,11 +244,11 @@ export interface CancelTransactionResponse extends BaseResponse {
 }
 
 export interface GetTransactionHistoryRequest extends PaginationRequest {
-  wallet_id: string;
-  enterprise_id: string;
-  start_date?: Timestamp;
-  end_date?: Timestamp;
-  transaction_type?: TransactionType;
+  walletId: string;
+  enterpriseId: string;
+  startDate?: Timestamp;
+  endDate?: Timestamp;
+  transactionType?: TransactionType;
 }
 
 export interface GetTransactionHistoryResponse extends PaginationResponse, BaseResponse {

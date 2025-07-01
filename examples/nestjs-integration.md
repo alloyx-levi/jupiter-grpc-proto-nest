@@ -1,10 +1,10 @@
-# 使用 Jupiter gRPC Proto 包的完整示例
+# 使用 Jupiter gRPC Proto 包的完整範例
 
-这个文件展示了如何在实际的 NestJS 微服务项目中使用 `@alloyx/jupiter-grpc-protos` 包。
+這個文件展示了如何在實際的 NestJS 微服務項目中使用 `@alloyx/jupiter-grpc-protos` 包。
 
-## 安装和配置
+## 安裝和配置
 
-### 1. 安装包
+### 1. 安裝包
 
 ```bash
 npm install @alloyx/jupiter-grpc-protos
@@ -17,9 +17,27 @@ npm install @alloyx/jupiter-grpc-protos
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
-## 企业用户服务集成
+### 3. 重要：Proto 文件路徑
 
-### 模块配置
+安裝包後，proto 文件位於 `node_modules/@alloyx/jupiter-grpc-protos/dist/protos/` 目錄下，而不是根目錄的 `protos/` 目錄。在配置 gRPC 客戶端時，請確保使用正確的路徑：
+
+```typescript
+// ✅ 正確的路徑
+protoPath: join(
+  __dirname,
+  '../../../node_modules/@alloyx/jupiter-grpc-protos/dist/protos/enterprise-user/v1/enterprise_user.proto'
+);
+
+// ❌ 錯誤的路徑
+protoPath: join(
+  __dirname,
+  '../../../node_modules/@alloyx/jupiter-grpc-protos/protos/enterprise-user/v1/enterprise_user.proto'
+);
+```
+
+## 企業用戶服務集成
+
+### 模組配置
 
 ```typescript
 // src/modules/user/user.module.ts
@@ -37,7 +55,7 @@ import { join } from 'path';
           package: 'enterprise_user.v1',
           protoPath: join(
             __dirname,
-            '../../../node_modules/@alloyx/jupiter-grpc-protos/protos/enterprise-user/v1/enterprise_user.proto'
+            '../../../node_modules/@alloyx/jupiter-grpc-protos/dist/protos/enterprise-user/v1/enterprise_user.proto'
           ),
           url: process.env.ENTERPRISE_USER_GRPC_URL || 'localhost:50051',
         },
@@ -50,7 +68,7 @@ import { join } from 'path';
 export class UserModule {}
 ```
 
-### 服务实现（使用 Promise 包装器）
+### 服務實現（使用 Promise 包裝器）
 
 ```typescript
 // src/modules/user/user.service.ts
@@ -78,7 +96,7 @@ export class UserService implements OnModuleInit {
   constructor(@Inject('ENTERPRISE_USER_SERVICE') private client: ClientGrpc) {}
 
   onModuleInit() {
-    // 使用包装器自动转换为 Promise
+    // Use wrapper to automatically convert to Promise
     this.enterpriseUserService = GrpcClientWrapper.wrapService<IEnterpriseUserService>(
       this.client,
       'EnterpriseUserService'
@@ -87,40 +105,40 @@ export class UserService implements OnModuleInit {
 
   async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     const request: CreateUserRequest = {
-      enterprise_id: createUserDto.enterpriseId,
-      first_name: createUserDto.firstName,
-      last_name: createUserDto.lastName,
+      enterpriseId: createUserDto.enterpriseId,
+      firstName: createUserDto.firstName,
+      lastName: createUserDto.lastName,
       email: createUserDto.email,
       password: createUserDto.password,
-      role_id: createUserDto.roleId,
+      roleId: createUserDto.roleId,
     };
 
-    // 不需要 .toPromise()，直接 await
+    // No need for .toPromise(), directly await
     return this.enterpriseUserService.createUser(request);
   }
 
   async findUsers(query: FindUsersQuery): Promise<FindUsersResponse> {
     const request: FindUsersRequest = {
-      enterprise_id: query.enterpriseId,
+      enterpriseId: query.enterpriseId,
       page: query.page || 1,
       limit: query.limit || 10,
       status: query.status,
     };
 
-    // 不需要 .toPromise()，直接 await
+    // No need for .toPromise(), directly await
     return this.enterpriseUserService.findUsers(request);
   }
 
   async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<UpdateUserResponse> {
     const request: UpdateUserRequest = {
-      user_id: userId,
-      enterprise_id: updateUserDto.enterpriseId,
-      first_name: updateUserDto.firstName,
-      last_name: updateUserDto.lastName,
-      role_id: updateUserDto.roleId,
+      userId: userId,
+      enterpriseId: updateUserDto.enterpriseId,
+      firstName: updateUserDto.firstName,
+      lastName: updateUserDto.lastName,
+      roleId: updateUserDto.roleId,
     };
 
-    // 不需要 .toPromise()，直接 await
+    // No need for .toPromise(), directly await
     return this.enterpriseUserService.updateUser(request);
   }
 
@@ -130,23 +148,23 @@ export class UserService implements OnModuleInit {
     status: UserStatus
   ): Promise<UpdateUserStatusResponse> {
     const request: UpdateUserStatusRequest = {
-      user_id: userId,
-      enterprise_id: enterpriseId,
+      userId: userId,
+      enterpriseId: enterpriseId,
       status,
     };
 
-    // 不需要 .toPromise()，直接 await
+    // No need for .toPromise(), directly await
     return this.enterpriseUserService.updateUserStatus(request);
   }
 }
 ```
 
-### 服务实现的两种方式
+### 服務實現的兩種方式
 
-#### 方式一：直接使用 gRPC 客户端（需要 .toPromise()）
+#### 方式一：直接使用 gRPC 客戶端（需要 .toPromise()）
 
 ```typescript
-// src/modules/user/user.service.ts (原始方式)
+// src/modules/user/user.service.ts (Original method)
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import {
@@ -175,45 +193,45 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     const request: CreateUserRequest = {
-      enterprise_id: createUserDto.enterpriseId,
-      first_name: createUserDto.firstName,
-      last_name: createUserDto.lastName,
+      enterpriseId: createUserDto.enterpriseId,
+      firstName: createUserDto.firstName,
+      lastName: createUserDto.lastName,
       email: createUserDto.email,
       password: createUserDto.password,
-      role_id: createUserDto.roleId,
+      roleId: createUserDto.roleId,
     };
 
-    // 需要手动调用 .toPromise()
+    // Need to manually call .toPromise()
     return this.enterpriseUserService.createUser(request).toPromise();
   }
 
   async findUsers(query: FindUsersQuery): Promise<FindUsersResponse> {
     const request: FindUsersRequest = {
-      enterprise_id: query.enterpriseId,
+      enterpriseId: query.enterpriseId,
       page: query.page || 1,
       limit: query.limit || 10,
       status: query.status,
     };
 
-    // 需要手动调用 .toPromise()
+    // Need to manually call .toPromise()
     return this.enterpriseUserService.findUsers(request).toPromise();
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UpdateUserResponse> {
     const request: UpdateUserRequest = {
-      id,
-      first_name: updateUserDto.firstName,
-      last_name: updateUserDto.lastName,
-      email: updateUserDto.email,
-      role_id: updateUserDto.roleId,
+      userId: id,
+      enterpriseId: updateUserDto.enterpriseId,
+      firstName: updateUserDto.firstName,
+      lastName: updateUserDto.lastName,
+      roleId: updateUserDto.roleId,
     };
 
-    // 需要手动调用 .toPromise()
+    // Need to manually call .toPromise()
     return this.enterpriseUserService.updateUser(request).toPromise();
   }
 
   async updateUserStatus(id: string, status: UserStatus): Promise<UpdateUserStatusResponse> {
-    const request: UpdateUserStatusRequest = { id, status };
+    const request: UpdateUserStatusRequest = { userId: id, enterpriseId: '', status };
 
     // 需要手动调用 .toPromise()
     return this.enterpriseUserService.updateUserStatus(request).toPromise();
@@ -324,7 +342,7 @@ import { join } from 'path';
           package: 'wallet.v1',
           protoPath: join(
             __dirname,
-            '../../../node_modules/@alloyx/jupiter-grpc-protos/protos/wallet/v1/wallet.proto'
+            '../../../node_modules/@alloyx/jupiter-grpc-protos/dist/protos/wallet/v1/wallet.proto'
           ),
           url: process.env.WALLET_GRPC_URL || 'localhost:50052',
         },
@@ -374,12 +392,12 @@ export class WalletService implements OnModuleInit {
 
   async createWallet(createWalletDto: CreateWalletDto): Promise<CreateWalletResponse> {
     const request: CreateWalletRequest = {
-      enterprise_id: createWalletDto.enterpriseId,
-      customer_ref_id: createWalletDto.customerRefId,
-      wallet_name: createWalletDto.walletName,
-      user_id: createWalletDto.userId,
-      wallet_type: createWalletDto.walletType as WalletType,
-      initial_currency: createWalletDto.initialCurrency,
+      enterpriseId: createWalletDto.enterpriseId,
+      customerRefId: createWalletDto.customerRefId,
+      walletName: createWalletDto.walletName,
+      userId: createWalletDto.userId,
+      walletType: createWalletDto.walletType as WalletType,
+      initialCurrency: createWalletDto.initialCurrency,
     };
 
     // 直接返回 Promise，无需 .toPromise()
@@ -388,11 +406,11 @@ export class WalletService implements OnModuleInit {
 
   async getWallets(query: GetWalletsQuery): Promise<GetWalletsResponse> {
     const request: GetWalletsRequest = {
-      enterprise_id: query.enterpriseId,
+      enterpriseId: query.enterpriseId,
       page: query.page || 1,
       limit: query.limit || 10,
-      user_id: query.userId,
-      wallet_type: query.walletType,
+      userId: query.userId,
+      walletType: query.walletType,
       status: query.status,
     };
 
@@ -403,9 +421,9 @@ export class WalletService implements OnModuleInit {
     createTransactionDto: CreateTransactionDto
   ): Promise<CreateTransactionResponse> {
     const request: CreateTransactionRequest = {
-      from_wallet_id: createTransactionDto.fromWalletId,
-      to_wallet_id: createTransactionDto.toWalletId,
-      transaction_type: createTransactionDto.transactionType as TransactionType,
+      fromWalletId: createTransactionDto.fromWalletId,
+      toWalletId: createTransactionDto.toWalletId,
+      transactionType: createTransactionDto.transactionType as TransactionType,
       amount: createTransactionDto.amount,
       currency: createTransactionDto.currency,
       description: createTransactionDto.description,
@@ -907,3 +925,108 @@ export class UserService implements OnModuleInit {
 **推荐使用 GrpcClientWrapper 方案**，它提供了最佳的灵活性和易用性平衡。
 
 这个示例展示了完整的 gRPC 微服务架构，包括错误处理、超时控制、配置管理和 Docker 部署。你可以根据实际需求调整配置和实现细节。
+
+## 🔄 重要：字段命名约定转换
+
+### Proto vs TypeScript 字段命名
+
+在使用 Jupiter gRPC Proto 包时，需要注意以下重要的命名约定转换：
+
+#### 1. Proto 文件（snake_case）
+
+```protobuf
+message CreateUserRequest {
+  string enterprise_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string password = 5;
+  int32 role_id = 6;
+}
+```
+
+#### 2. TypeScript 接口（camelCase）
+
+```typescript
+export interface CreateUserRequest {
+  enterpriseId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  roleId: number;
+}
+```
+
+#### 3. 使用示例
+
+```typescript
+// ✅ 正确的字段命名（camelCase）
+const request: CreateUserRequest = {
+  enterpriseId: 'ent_123',
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john@example.com',
+  password: 'password123',
+  roleId: 1,
+};
+
+// ❌ 错误的字段命名（snake_case）
+const request: CreateUserRequest = {
+  enterprise_id: 'ent_123', // 错误！
+  first_name: 'John', // 错误！
+  last_name: 'Doe', // 错误！
+  email: 'john@example.com',
+  password: 'password123',
+  role_id: 1, // 错误！
+};
+```
+
+### 命名转换规则
+
+| Proto (snake_case) | TypeScript (camelCase) |
+| ------------------ | ---------------------- |
+| `enterprise_id`    | `enterpriseId`         |
+| `first_name`       | `firstName`            |
+| `last_name`        | `lastName`             |
+| `role_id`          | `roleId`               |
+| `user_id`          | `userId`               |
+| `wallet_id`        | `walletId`             |
+| `transaction_id`   | `transactionId`        |
+| `customer_ref_id`  | `customerRefId`        |
+| `wallet_name`      | `walletName`           |
+| `wallet_type`      | `walletType`           |
+| `created_at`       | `createdAt`            |
+| `updated_at`       | `updatedAt`            |
+
+### 为什么需要这种转换？
+
+1. **protobuf 规范**：官方推荐使用 `snake_case` 命名
+2. **JavaScript/TypeScript 规范**：推荐使用 `camelCase` 命名
+3. **gRPC 代码生成器**：自动处理这种转换，生成符合 JavaScript 规范的接口
+
+### 检查生成的类型定义
+
+如果不确定字段名称，可以查看生成的类型定义文件：
+
+```bash
+# 查看生成的类型定义
+cat node_modules/@alloyx/jupiter-grpc-protos/dist/generated/enterprise-user/v1/enterprise_user_pb.d.ts
+```
+
+生成的 `AsObject` 类型会显示正确的 camelCase 字段名：
+
+```typescript
+export namespace CreateUserRequest {
+  export type AsObject = {
+    enterpriseId: string; // ✅ camelCase
+    firstName: string; // ✅ camelCase
+    lastName: string; // ✅ camelCase
+    email: string;
+    password: string;
+    roleId: number; // ✅ camelCase
+  };
+}
+```
+
+记住：在 TypeScript 代码中始终使用 **camelCase** 字段名，即使 proto 文件使用 snake_case！

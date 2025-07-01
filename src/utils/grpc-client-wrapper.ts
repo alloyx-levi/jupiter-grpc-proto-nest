@@ -1,30 +1,28 @@
 import { Observable } from 'rxjs';
 
 /**
- * gRPC 客户端包装器，自动将 Observable 转换为 Promise
+ * gRPC client wrapper that automatically converts Observable to Promise
  */
 export class GrpcClientWrapper {
   /**
-   * 包装 gRPC 服务，自动转换所有方法的返回值从 Observable 到 Promise
+   * Wrap gRPC service, automatically convert all method return values from Observable to Promise
    */
   static wrapService<T extends Record<string, any>>(
-    client: any,
-    serviceName: string
+    service: T,
   ): PromisifiedService<T> {
-    const service = client.getService(serviceName) as T;
     const wrappedService = {} as any;
 
-    // 获取服务的所有方法
+    // Get all methods of the service
     const proto = Object.getPrototypeOf(service);
     const methodNames = Object.getOwnPropertyNames(proto).filter(
       name => typeof service[name] === 'function' && name !== 'constructor'
     );
 
-    // 包装每个方法
+    // Wrap each method
     methodNames.forEach(methodName => {
       wrappedService[methodName] = (...args: any[]) => {
         const result = service[methodName](...args);
-        // 如果返回值是 Observable，转换为 Promise
+        // If return value is Observable, convert to Promise
         if (result && typeof result.toPromise === 'function') {
           return result.toPromise();
         }
@@ -37,7 +35,7 @@ export class GrpcClientWrapper {
 }
 
 /**
- * 将服务接口中的所有 Observable<T> 转换为 Promise<T>
+ * Convert all Observable<T> to Promise<T> in service interface
  */
 export type PromisifiedService<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => Observable<infer R>
@@ -48,11 +46,11 @@ export type PromisifiedService<T> = {
 };
 
 /**
- * Promisified 企业用户服务接口
+ * Promisified enterprise user service interface
  */
 export type IEnterpriseUserServicePromise = PromisifiedService<import('../interfaces/enterprise-user.interface').IEnterpriseUserService>;
 
 /**
- * Promisified 钱包服务接口
+ * Promisified wallet service interface
  */
 export type IWalletServicePromise = PromisifiedService<import('../interfaces/wallet.interface').IWalletService>;

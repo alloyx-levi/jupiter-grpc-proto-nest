@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { Timestamp, HealthCheckResponse, PaginationRequest, PaginationResponse, BaseResponse } from '../types/common.types';
 
-// 企业用户服务接口定义
+// Enterprise user service interface definition
 export interface IEnterpriseUserService {
-  // ========== 用户管理 ==========
+  // ========== User Management ==========
   createUser(request: CreateUserRequest): Observable<CreateUserResponse>;
   findUsers(request: FindUsersRequest): Observable<FindUsersResponse>;
   updateUser(request: UpdateUserRequest): Observable<UpdateUserResponse>;
@@ -11,32 +11,32 @@ export interface IEnterpriseUserService {
   updateUserStatus(request: UpdateUserStatusRequest): Observable<UpdateUserStatusResponse>;
   activateUser(request: ActivateUserRequest): Observable<ActivateUserResponse>;
 
-  // ========== 企业管理 ==========
+  // ========== Enterprise Management ==========
   createEnterprise(request: CreateEnterpriseRequest): Observable<CreateEnterpriseResponse>;
   queryEnterpriseById(request: QueryEnterpriseByIdRequest): Observable<QueryEnterpriseByIdResponse>;
 
-  // ========== 角色权限管理 ==========
+  // ========== Role Permission Management ==========
   createRole(request: CreateRoleRequest): Observable<CreateRoleResponse>;
   getRoles(request: GetRolesRequest): Observable<GetRolesResponse>;
   getPermissions(request: GetPermissionsRequest): Observable<GetPermissionsResponse>;
   updateRolePermissions(request: UpdateRolePermissionsRequest): Observable<UpdateRolePermissionsResponse>;
   deleteRole(request: DeleteRoleRequest): Observable<void>;
 
-  // ========== 健康检查 ==========
+  // ========== Health Check ==========
   healthCheck(request: void): Observable<HealthCheckResponse>;
 }
 
-// 用户相关类型定义
+// User related type definitions
 export interface User {
   id: string;
-  enterprise_id: string;
-  first_name: string;
-  last_name: string;
+  enterpriseId: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role_id: number;
+  roleId: number;
   status: UserStatus;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export enum UserStatus {
@@ -47,7 +47,7 @@ export enum UserStatus {
   USER_STATUS_SUSPENDED = 4,
 }
 
-// 企业相关类型定义
+// Enterprise related type definitions
 export interface Enterprise {
   id: string;
   name: string;
@@ -57,8 +57,8 @@ export interface Enterprise {
   email: string;
   address: string;
   status: EnterpriseStatus;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export enum EnterpriseStatus {
@@ -68,15 +68,15 @@ export enum EnterpriseStatus {
   ENTERPRISE_STATUS_SUSPENDED = 3,
 }
 
-// 角色权限相关类型定义
+// Role permission related type definitions
 export interface Role {
   id: number;
-  enterprise_id: string;
+  enterpriseId: string;
   name: string;
   description: string;
   permissions: Permission[];
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Permission {
@@ -87,16 +87,16 @@ export interface Permission {
   action: string;
 }
 
-// ========== 请求/响应类型定义 ==========
+// ========== Request/Response Type Definitions ==========
 
-// 用户管理请求/响应
+// User management request/response
 export interface CreateUserRequest {
-  enterprise_id: string;
-  first_name: string;
-  last_name: string;
+  enterpriseId: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  role_id: number;
+  roleId: number;
 }
 
 export interface CreateUserResponse {
@@ -106,12 +106,12 @@ export interface CreateUserResponse {
 }
 
 export interface FindUsersRequest {
-  enterprise_id: string;
+  enterpriseId: string;
   page: number;
   limit: number;
   status?: UserStatus;
   email?: string;
-  role_id?: number;
+  roleId?: number;
 }
 
 export interface FindUsersResponse {
@@ -124,11 +124,11 @@ export interface FindUsersResponse {
 }
 
 export interface UpdateUserRequest {
-  user_id: string;
-  enterprise_id: string;
-  first_name?: string;
-  last_name?: string;
-  role_id?: number;
+  userId: string;
+  enterpriseId: string;
+  firstName?: string;
+  lastName?: string;
+  roleId?: number;
 }
 
 export interface UpdateUserResponse {
@@ -138,13 +138,13 @@ export interface UpdateUserResponse {
 }
 
 export interface DeleteUserRequest {
-  user_id: string;
-  enterprise_id: string;
+  userId: string;
+  enterpriseId: string;
 }
 
 export interface UpdateUserStatusRequest {
-  user_id: string;
-  enterprise_id: string;
+  userId: string;
+  enterpriseId: string;
   status: UserStatus;
 }
 
@@ -155,9 +155,9 @@ export interface UpdateUserStatusResponse {
 }
 
 export interface ActivateUserRequest {
-  user_id: string;
-  enterprise_id: string;
-  activation_token: string;
+  userId: string;
+  enterpriseId: string;
+  activationToken: string;
 }
 
 export interface ActivateUserResponse {
@@ -166,7 +166,7 @@ export interface ActivateUserResponse {
   message: string;
 }
 
-// 企业管理请求/响应
+// Enterprise management request/response
 export interface CreateEnterpriseRequest {
   name: string;
   description: string;
@@ -183,7 +183,7 @@ export interface CreateEnterpriseResponse {
 }
 
 export interface QueryEnterpriseByIdRequest {
-  enterprise_id: string;
+  enterpriseId: string;
 }
 
 export interface QueryEnterpriseByIdResponse {
@@ -192,12 +192,12 @@ export interface QueryEnterpriseByIdResponse {
   message: string;
 }
 
-// 角色权限管理请求/响应
+// Role permission management request/response
 export interface CreateRoleRequest {
-  enterprise_id: string;
+  enterpriseId: string;
   name: string;
   description: string;
-  permission_ids: number[];
+  permissionIds: number[];
 }
 
 export interface CreateRoleResponse {
@@ -207,7 +207,7 @@ export interface CreateRoleResponse {
 }
 
 export interface GetRolesRequest {
-  enterprise_id: string;
+  enterpriseId: string;
   page: number;
   limit: number;
 }
@@ -237,9 +237,9 @@ export interface GetPermissionsResponse {
 }
 
 export interface UpdateRolePermissionsRequest {
-  role_id: number;
-  enterprise_id: string;
-  permission_ids: number[];
+  roleId: number;
+  enterpriseId: string;
+  permissionIds: number[];
 }
 
 export interface UpdateRolePermissionsResponse {
@@ -249,6 +249,6 @@ export interface UpdateRolePermissionsResponse {
 }
 
 export interface DeleteRoleRequest {
-  role_id: number;
-  enterprise_id: string;
+  roleId: number;
+  enterpriseId: string;
 }

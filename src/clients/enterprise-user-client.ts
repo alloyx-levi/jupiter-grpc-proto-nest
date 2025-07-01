@@ -9,7 +9,7 @@ export interface GrpcClientConfig {
   options?: any;
 }
 
-// 企业用户综合服务客户端
+// Enterprise user comprehensive service client
 export function createEnterpriseUserServiceClient(config: GrpcClientConfig): EnterpriseUserServiceClient {
   const clientCredentials = config.credentials || credentials.createInsecure();
   return new EnterpriseUserServiceClient(config.url, clientCredentials, config.options);

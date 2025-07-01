@@ -1,6 +1,6 @@
-// 导出所有服务接口
+// Export all service interfaces
 export * from './enterprise-user.interface';
 export * from './wallet.interface';
 
-// 导出通用类型
+// Export common types
 export * from '../types/common.types';
