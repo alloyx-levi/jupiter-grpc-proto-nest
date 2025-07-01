@@ -53,6 +53,7 @@ export interface AuthUser {
   lastName: string;
   phone?: string;
   country?: string;
+  enterpriseId?: string;
   status: AuthUserStatus;
   kybStatus: KybStatus;
   kycStatus: KycStatus;
@@ -63,6 +64,7 @@ export interface AuthUser {
 
 // Login request and response
 export interface LoginRequest {
+  enterpriseId?: string;
   email: string;
   password: string;
   rememberMe?: boolean;
@@ -124,10 +126,8 @@ export interface SavePasswordResponse extends BaseResponse<void> { }
 
 // Update password request and response
 export interface UpdatePasswordRequest {
-  userId: string;
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
+  email: string;
+  password: string;
 }
 
 export interface UpdatePasswordResponse extends BaseResponse<void> { }

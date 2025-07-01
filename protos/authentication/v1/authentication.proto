@@ -54,7 +54,7 @@ enum KycStatus {
 message AuthUser {
   string user_id = 1;
   string user_type = 2;
-  string enterprise_id = 3;
+  optional string enterprise_id = 3;
   AuthUserStatus user_status = 4;
   KybStatus kyb_status = 5;
   KycStatus kyc_status = 6;
@@ -63,7 +63,7 @@ message AuthUser {
 
 // Login request
 message LoginRequest {
-  string enterprise_id = 1;
+  optional string enterprise_id = 1;
   string email = 2;
   string password = 3;
 }
@@ -138,8 +138,7 @@ message SavePasswordResponse {
 // Update password request
 message UpdatePasswordRequest {
   string email = 1;
-  string old_password = 2;
-  string new_password = 3;
+  string password = 2;
 }
 
 // Update password response
