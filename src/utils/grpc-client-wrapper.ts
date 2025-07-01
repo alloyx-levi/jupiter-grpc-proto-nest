@@ -54,3 +54,13 @@ export type IEnterpriseUserServicePromise = PromisifiedService<import('../interf
  * Promisified wallet service interface
  */
 export type IWalletServicePromise = PromisifiedService<import('../interfaces/wallet.interface').IWalletService>;
+
+/**
+ * Promisified authentication service interface
+ */
+export type IAuthenticationServicePromise = PromisifiedService<import('../interfaces/authentication.interface').IAuthenticationService>;
+
+/**
+ * Promisified authorization service interface
+ */
+export type IAuthorizationServicePromise = PromisifiedService<import('../interfaces/authorization.interface').IAuthorizationService>;

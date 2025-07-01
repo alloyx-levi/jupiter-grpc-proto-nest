@@ -31,7 +31,9 @@ export {
   GrpcClientWrapper,
   PromisifiedService,
   IEnterpriseUserServicePromise,
-  IWalletServicePromise
+  IWalletServicePromise,
+  IAuthenticationServicePromise,
+  IAuthorizationServicePromise
 } from './src/utils/grpc-client-wrapper';
 
 export * from './src/types';
