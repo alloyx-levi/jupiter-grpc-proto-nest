@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package authentication.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "common/v1/common.proto";
+
+// Authentication service definition
+service AuthenticationService {
+  // User authentication
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // Password management
+  rpc CheckPasswordStrength(PasswordStrengthRequest) returns (PasswordStrengthResponse);
+  rpc SavePassword(SavePasswordRequest) returns (SavePasswordResponse);
+  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
+  rpc DeletePassword(DeletePasswordRequest) returns (DeletePasswordResponse);
+
+  // Health check
+  rpc HealthCheck(google.protobuf.Empty) returns (common.v1.HealthCheckResponse);
+}
+
+// Auth user status enum
+enum AuthUserStatus {
+  AUTH_USER_STATUS_UNSPECIFIED = 0;
+  AUTH_USER_STATUS_ACTIVE = 1;
+  AUTH_USER_STATUS_INACTIVE = 2;
+  AUTH_USER_STATUS_PENDING = 3;
+  AUTH_USER_STATUS_SUSPENDED = 4;
+}
+
+// KYB status enum
+enum KybStatus {
+  KYB_STATUS_UNSPECIFIED = 0;
+  KYB_STATUS_PENDING = 1;
+  KYB_STATUS_APPROVED = 2;
+  KYB_STATUS_REJECTED = 3;
+  KYB_STATUS_UNDER_REVIEW = 4;
+}
+
+// KYC status enum
+enum KycStatus {
+  KYC_STATUS_UNSPECIFIED = 0;
+  KYC_STATUS_PENDING = 1;
+  KYC_STATUS_APPROVED = 2;
+  KYC_STATUS_REJECTED = 3;
+  KYC_STATUS_UNDER_REVIEW = 4;
+}
+
+// Auth user information
+message AuthUser {
+  string user_id = 1;
+  string user_type = 2;
+  string enterprise_id = 3;
+  AuthUserStatus user_status = 4;
+  KybStatus kyb_status = 5;
+  KycStatus kyc_status = 6;
+  repeated string roles = 7;
+}
+
+// Login request
+message LoginRequest {
+  string enterprise_id = 1;
+  string email = 2;
+  string password = 3;
+}
+
+// Login response
+message LoginResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  string access_token = 4;
+  string refresh_token = 5;
+  AuthUser user_info = 6;
+}
+
+// Logout request
+message LogoutRequest {
+  string user_id = 1;
+  string access_token = 2;
+}
+
+// Logout response
+message LogoutResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+}
+
+// Validate token request
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+// Validate token response
+message ValidateTokenResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  bool is_valid = 4;
+  AuthUser user_info = 5;
+  google.protobuf.Timestamp expires_at = 6;
+}
+
+// Password strength request
+message PasswordStrengthRequest {
+  string password = 1;
+}
+
+// Password strength response
+message PasswordStrengthResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  int32 strength_score = 4;
+  string strength_level = 5;
+  repeated string suggestions = 6;
+}
+
+// Save password request
+message SavePasswordRequest {
+  string id = 1;
+  string password = 2;
+  string email = 3;
+}
+
+// Save password response
+message SavePasswordResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+}
+
+// Update password request
+message UpdatePasswordRequest {
+  string email = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+// Update password response
+message UpdatePasswordResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+}
+
+// Delete password request
+message DeletePasswordRequest {
+  string id = 1;
+}
+
+// Delete password response
+message DeletePasswordResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+}

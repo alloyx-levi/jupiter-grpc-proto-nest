@@ -12,10 +12,12 @@
   "scripts": {
     "prebuild": "rimraf dist generated",
     "build": "npm run generate:proto && npm run build:ts && npm run copy:assets",
-    "generate:proto": "mkdir -p generated && npm run generate:common && npm run generate:enterprise-user && npm run generate:wallet",
+    "generate:proto": "mkdir -p generated && npm run generate:common && npm run generate:enterprise-user && npm run generate:wallet && npm run generate:authentication && npm run generate:authorization",
     "generate:common": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/common/v1/*.proto",
     "generate:enterprise-user": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/enterprise-user/v1/*.proto",
     "generate:wallet": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/wallet/v1/*.proto",
+    "generate:authentication": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/authentication/v1/*.proto",
+    "generate:authorization": "grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./generated --js_out=import_style=commonjs,binary:./generated --grpc_out=grpc_js:./generated -I ./protos ./protos/authorization/v1/*.proto",
     "build:ts": "tsc",
     "copy:assets": "npm run copy:protos && npm run copy:generated",
     "copy:protos": "mkdir -p dist/protos && cp -r protos/* dist/protos/",

@@ -21,7 +21,23 @@ export interface PaginationResponse {
   limit: number;
 }
 
-export interface BaseResponse {
+export interface BaseResponse<T = any> {
   success: boolean;
   message: string;
+  data?: T;
+  errorCode?: string;
+  meta?: ResponseMeta;
+}
+
+export interface ResponseMeta {
+  timestamp: Timestamp;
+  requestId?: string;
+  pagination?: PaginationInfo;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }

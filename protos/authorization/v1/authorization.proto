@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package authorization.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "common/v1/common.proto";
+
+// Authorization service definition
+service AuthorizationService {
+  // Permission management
+  rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse);
+  rpc GetAuthPermissions(GetAuthPermissionsRequest) returns (GetAuthPermissionsResponse);
+  rpc UpdateAuthPermission(UpdateAuthPermissionRequest) returns (UpdateAuthPermissionResponse);
+  rpc DeleteAuthPermission(DeleteAuthPermissionRequest) returns (DeleteAuthPermissionResponse);
+  
+  // Common transactions
+  rpc GetAuthTransactions(GetAuthTransactionsRequest) returns (GetAuthTransactionsResponse);
+
+  // Health check
+  rpc HealthCheck(google.protobuf.Empty) returns (common.v1.HealthCheckResponse);
+}
+
+// Create permission request and response
+message CreatePermissionRequest {
+  string name = 1;
+  string code = 2;
+  string description = 3;
+  string service = 4;
+}
+
+message CreatePermissionResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  optional AuthPermission data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// Get permissions request and response
+message GetAuthPermissionsRequest {
+  optional int32 page = 1;
+  optional int32 limit = 2;
+  optional string service = 3;
+  optional string search = 4;
+}
+
+message GetAuthPermissionsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated AuthPermission data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// Update permission request and response
+message UpdateAuthPermissionRequest {
+  int32 permission_id = 1;
+  optional string name = 2;
+  optional string code = 3;
+  optional string description = 4;
+  optional string service = 5;
+}
+
+message UpdateAuthPermissionResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  optional AuthPermission data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// Delete permission request and response
+message DeleteAuthPermissionRequest {
+  int32 permission_id = 1;
+  bool hard_delete = 2;
+}
+
+message DeleteAuthPermissionResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  common.v1.ResponseMeta meta = 4;
+}
+
+// Get transactions request and response
+message GetAuthTransactionsRequest {
+  optional int32 page = 1;
+  optional int32 limit = 2;
+}
+
+message GetAuthTransactionsResponse {
+  bool success = 1;
+  string error_code = 2;
+  string message = 3;
+  repeated AuthTransaction data = 4;
+  common.v1.ResponseMeta meta = 5;
+}
+
+// Auth permission data model
+message AuthPermission {
+  int32 id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string service = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
+}
+
+// Auth transaction data model
+message AuthTransaction {
+  int32 id = 1;
+  string type = 2;
+  string status = 3;
+  string description = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
