@@ -61,8 +61,8 @@ jobs:
       - name: Generate proto files
         run: npm run generate:proto
 
-      - name: Build TypeScript
-        run: npm run build:ts
+      - name: Build package
+        run: npm run build
 
       - name: Run tests
         run: npm test
@@ -95,10 +95,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Download generated files
-        uses: actions/download-artifact@v4
-        with:
-          name: generated-files
+      - name: Build package
+        run: npm run build
 
       - name: Set package version for main branch
         if: github.ref == 'refs/heads/main'
